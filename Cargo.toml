@@ -1,0 +1,16 @@
+[package]
+name = "unicorn_hat_hd"
+version = "0.1.0"
+authors = ["Jacob Helwig <jacob@technosorcery.net>"]
+
+[lib]
+name = "unicorn_hat_hd"
+path = "src/lib.rs"
+
+[[bin]]
+name = "unicorn-hat-hd"
+path = "src/bin.rs"
+doc = false
+
+[dependencies]
+spidev = "0.3.0"
