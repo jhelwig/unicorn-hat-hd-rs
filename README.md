@@ -8,17 +8,17 @@ The docs can be found online at [docs.rs](https://docs.rs/unicorn-hat-hd/), or b
 
 ## Example
 
-Add `unicorn-hat-hd` to your `Cargo.toml`.
+Add `unicorn_hat_hd` to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-unicorn-hat-hd = "0.1"
+unicorn_hat_hd = "0.1"
 ```
 
-Add `unicorn-hat-hd` to your crate root.
+Add `unicorn_hat_hd` to your crate root.
 
 ```rust
-extern crate unicorn-hat-hd;
+extern crate unicorn_hat_hd;
 ```
 
 Create a default `UnicornHatHd`, and start setting some pixels.
