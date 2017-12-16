@@ -2,15 +2,16 @@
 name = "unicorn_hat_hd"
 version = "0.1.0"
 authors = ["Jacob Helwig <jacob@technosorcery.net>"]
-
-[lib]
-name = "unicorn_hat_hd"
-path = "src/lib.rs"
-
-[[bin]]
-name = "unicorn-hat-hd"
-path = "src/bin.rs"
-doc = false
+description = "Provides an interface to the Pimoroni Unicorn HAT HD on a Raspberry PI"
+repository = "https://github.com/jhelwig/unicorn-hat-hd-rs"
+readme = "README.md"
+license = "BSD-3-Clause"
+keywords = ["pimoroni"]
+categories = ["hardware-support"]
+exclude = [
+    ".vscode/*",
+]
 
 [dependencies]
 spidev = "0.3.0"
+failure = "0.1.1"
