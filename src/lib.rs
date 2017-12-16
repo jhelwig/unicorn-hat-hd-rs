@@ -20,7 +20,7 @@ impl UnicornHatHd {
   /// Typically, the path will be something like `"/dev/spidev0.0"`
   /// where the first number if the bus and the second number
   /// is the chip select on that bus for the device being targeted.
-  fn new(spi_path: &str) -> Result<UnicornHatHd, Error> {
+  pub fn new(spi_path: &str) -> Result<UnicornHatHd, Error> {
     let mut spidev = try!(Spidev::open(spi_path));
     let options = SpidevOptions::new()
          .bits_per_word(8)
