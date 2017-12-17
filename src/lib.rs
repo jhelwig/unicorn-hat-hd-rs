@@ -43,13 +43,19 @@ impl UnicornHatHd {
   }
 
   /// Set an individual pixel's RGB value.
+  ///
+  /// The origin (`(0, 0)`) is the top-left of the display, with `x` & `y`
+  /// increasing to the right, and down, respectively.
   pub fn set_pixel(&mut self, x: usize, y: usize, r: u8, g: u8, b: u8) {
     self.leds[(y * 16) + x].set_rgb(r, g, b);
   }
 
   /// Return a tuple of an individual pixel's RGB value.
   ///
-  /// This returns what's in the display buffer, not what the
+  /// The origin (`(0, 0)`) is the top-left of the display, with `x` & `y`
+  /// increasing to the right, and down, respectively.
+  ///
+  /// *NOTE*: This returns what's in the display buffer, not what the
   /// physical pixel is set to.
   pub fn get_pixel(&self, x: usize, y: usize) -> (u8, u8, u8) {
     self.leds[(y * 16) + x].get_rgb()
