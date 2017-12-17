@@ -5,9 +5,9 @@ use failure::Error;
 use std::io::prelude::*;
 use spidev::{Spidev, SpidevOptions, SPI_MODE_0};
 
-/// Provide high-level access to the Unicorn Hat HD.
+/// Provide high-level access to the Unicorn HAT HD.
 pub struct UnicornHatHd {
-  leds: [[UnicornHatHdLed; 16]; 16],
+  leds: [UnicornHatHdLed; 256],
   spi: Spidev,
 }
 
@@ -29,7 +29,7 @@ impl UnicornHatHd {
          .build();
     try!(spidev.configure(&options));
     Ok(UnicornHatHd {
-      leds: [[UnicornHatHdLed::default(); 16]; 16],
+      leds: [UnicornHatHdLed::default(); 256],
       spi: spidev,
     })
   }
@@ -44,7 +44,7 @@ impl UnicornHatHd {
 
   /// Set an individual pixel's RGB value.
   pub fn set_pixel(&mut self, x: usize, y: usize, r: u8, g: u8, b: u8) {
-    self.leds[x][y].set_rgb(r, g, b);
+    self.leds[(y * 16) + x].set_rgb(r, g, b);
   }
 
   /// Return a tuple of an individual pixel's RGB value.
@@ -52,20 +52,18 @@ impl UnicornHatHd {
   /// This returns what's in the display buffer, not what the
   /// physical pixel is set to.
   pub fn get_pixel(&self, x: usize, y: usize) -> (u8, u8, u8) {
-    self.leds[x][y].get_rgb()
+    self.leds[(y * 16) + x].get_rgb()
   }
 
   fn as_array(&self) -> Vec<u8> {
     let mut arr: Vec<u8> = vec![];
 
-    for row in self.leds.iter() {
-      for led in row.iter() {
+    for led in self.leds.iter() {
         let (r, g, b) = led.get_rgb();
         arr.push(r);
         arr.push(g);
         arr.push(b);
       }
-    }
 
     arr
   }
