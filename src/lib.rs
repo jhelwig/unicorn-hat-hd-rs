@@ -61,6 +61,14 @@ impl UnicornHatHd {
     self.leds[(y * 16) + x].get_rgb()
   }
 
+  /// Clear the internal buffer of pixel states.
+  ///
+  /// To clear the display itself, you'll still need to call
+  /// [`display`](#method.display) to update the Unicorn HAT HD.
+  pub fn clear_pixels(&mut self) {
+    self.leds = [UnicornHatHdLed::default(); 256];
+  }
+
   fn as_array(&self) -> Vec<u8> {
     let mut arr: Vec<u8> = vec![];
 
