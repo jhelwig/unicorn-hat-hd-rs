@@ -4,7 +4,7 @@ Rust library for interacting with the Pimoroni Unicorn HAT HD.
 
 ## Documentation
 
-The docs can be found online at [docs.rs](https://docs.rs/unicorn-hat-hd/), or be built using `cargo doc`.
+The docs can be found online at [docs.rs](https://docs.rs/unicorn_hat_hd/), or be built using `cargo doc`.
 
 ## Example
 
@@ -29,8 +29,8 @@ use unicorn_hat_hd::UnicornHatHd;
 pub fn main() {
     let mut hat_hd = UnicornHatHd::default();
     loop {
-        for x in 0..16 {
-            for y in 0..16 {
+        for y in 0..16 {
+            for x in 0..16 {
                 hat_hd.set_pixel(x, y, 255, 255, 255);
                 hat_hd.display().unwrap();
                 hat_hd.set_pixel(x, y, 0, 0, 0);
