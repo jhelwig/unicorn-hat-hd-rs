@@ -5,10 +5,24 @@ use failure::Error;
 use std::io::prelude::*;
 use spidev::{Spidev, SpidevOptions, SPI_MODE_0};
 
+/// Possible rotations of the buffer before displaying to the
+/// Unicorn HAT HD.
+pub enum Rotate {
+  /// Default rotation.
+  RotNone,
+  /// Rotate the output by 90 degrees clockwise.
+  RotCW90,
+  /// Rotate the output by 90 degrees counter-clockwise.
+  RotCCW90,
+  /// Rotate the output by 180 degrees.
+  Rot180,
+}
+
 /// Provide high-level access to the Unicorn HAT HD.
 pub struct UnicornHatHd {
   leds: [UnicornHatHdLed; 256],
   spi: Spidev,
+  rotation: Rotate,
 }
 
 impl UnicornHatHd {
@@ -31,7 +45,18 @@ impl UnicornHatHd {
     Ok(UnicornHatHd {
       leds: [UnicornHatHdLed::default(); 256],
       spi: spidev,
+      rotation: Rotate::RotNone,
     })
+  }
+
+  /// Rotate the display buffer by [`Rotate`](enum.Rotate.html) degrees
+  /// before sending to the Unicorn HAT HD.
+  ///
+  /// This allows for different mounting orientations of the Unicorn HAT HD
+  /// without having to translate the `(x, y)` of each pixel to account for the
+  /// physical rotation of the display.
+  pub fn set_rotation(&mut self, rot: Rotate) {
+    self.rotation = rot;
   }
 
   /// Write the display buffer to the Unicorn HAT HD.
@@ -69,15 +94,68 @@ impl UnicornHatHd {
     self.leds = [UnicornHatHdLed::default(); 256];
   }
 
+  /// Translate the internal buffer into a `Vec<u8>` of RGB values. The LEDs on
+  /// the Unicorn HAT HD are addressed in the following order, with each LED
+  /// consisting of three `u8`, one each for the R, G, and B values (assuming no
+  /// rotation has been set):
+  ///
+  /// Physical LEDs => Vec<u8> order
+  ///     1 2 3
+  ///     4 5 6     => 1 2 3 4 5 6 7 8 9
+  ///     7 8 9
   fn as_array(&self) -> Vec<u8> {
     let mut arr: Vec<u8> = vec![];
 
-    for led in self.leds.iter() {
-        let (r, g, b) = led.get_rgb();
-        arr.push(r);
-        arr.push(g);
-        arr.push(b);
-      }
+    match self.rotation {
+      // 1 2 3    1 2 3
+      // 4 5 6 => 4 5 6 => 1 2 3 4 5 6 7 8 9
+      // 7 8 9    7 8 9
+      Rotate::RotNone => {
+        for led in self.leds.iter() {
+          let (r, g, b) = led.get_rgb();
+          arr.push(r);
+          arr.push(g);
+          arr.push(b);
+        }
+      },
+      // 1 2 3    7 4 1
+      // 4 5 6 => 8 5 2 => 7 4 1 8 5 2 9 6 3
+      // 7 8 9    9 6 3
+      Rotate::RotCW90 => {
+        for x in 0..16 {
+          for y in (0..16).rev() {
+            let (r, g, b) = self.get_pixel(x, y);
+            arr.push(r);
+            arr.push(g);
+            arr.push(b);
+          }
+        }
+      },
+      // 1 2 3    3 6 9
+      // 4 5 6 => 2 5 8 => 3 6 9 2 5 8 1 4 7
+      // 7 8 9    1 4 7
+      Rotate::RotCCW90 => {
+        for x in (0..16).rev() {
+          for y in 0..16 {
+            let (r, g, b) = self.get_pixel(x, y);
+            arr.push(r);
+            arr.push(g);
+            arr.push(b);
+          }
+        }
+      },
+      // 1 2 3    9 8 7
+      // 4 5 6 => 6 5 4 => 9 8 7 6 5 4 3 2 1
+      // 7 8 9    3 2 1
+      Rotate::Rot180 => {
+        for led in self.leds.iter().rev() {
+          let (r, g, b) = led.get_rgb();
+          arr.push(r);
+          arr.push(g);
+          arr.push(b);
+        }
+      },
+    }
 
     arr
   }
