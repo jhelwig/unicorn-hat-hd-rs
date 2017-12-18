@@ -40,6 +40,26 @@ pub fn main() {
 }
 ```
 
+## Emulated display
+
+In order to help make development of apps that use the library a little
+faster/easier/less-painful, you can turn on emulation of the physical display,
+so that it can compile on platforms other than Linux & the Raspberry PI.
+
+In the `Cargo.toml`:
+
+```toml
+[dependencies.unicorn_hat_hd]
+version = "*"
+default-features = false
+features = ["fake-hardware"]
+```
+
+Though, you should replace the `version = "*"` with an actual version
+constraint. Another thing of note is that the emulated display mode does not
+respect any display rotation that has been set, and will always output as though
+`Rotate::RotNone` were set.
+
 ## Copyright and license
 
 Copyright (c) 2017 Jacob Helwig. Released under the [BSD license](LICENSE).

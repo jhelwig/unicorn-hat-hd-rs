@@ -1,3 +1,10 @@
 {
-    "rust.target": "armv7-unknown-linux-gnueabihf"
+    "rust.target": "armv7-unknown-linux-gnueabihf",
+    "cSpell.words": [
+        "leds",
+        "println",
+        "spidev",
+        "struct",
+        "usize"
+    ]
 }
