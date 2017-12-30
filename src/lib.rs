@@ -10,6 +10,7 @@ use ansi_term::Color::RGB;
 #[cfg(feature = "fake-hardware")]
 use ansi_term::ANSIStrings;
 use failure::Error;
+use rgb::ComponentSlice;
 #[cfg(feature = "hardware")]
 use std::io::prelude::*;
 #[cfg(feature = "hardware")]
@@ -160,20 +161,14 @@ impl UnicornHatHd {
             // 1 2 3    1 2 3
             // 4 5 6 => 4 5 6 => 1 2 3 4 5 6 7 8 9
             // 7 8 9    7 8 9
-            Rotate::RotNone => for led in self.leds.iter() {
-                arr.push(led.r);
-                arr.push(led.g);
-                arr.push(led.b);
-            },
+            Rotate::RotNone => arr.extend_from_slice(self.leds.as_slice()),
             // 1 2 3    7 4 1
             // 4 5 6 => 8 5 2 => 7 4 1 8 5 2 9 6 3
             // 7 8 9    9 6 3
             Rotate::RotCW90 => for x in 0..16 {
                 for y in (0..16).rev() {
                     let led = self.get_pixel(x, y);
-                    arr.push(led.r);
-                    arr.push(led.g);
-                    arr.push(led.b);
+                    arr.extend_from_slice(led.as_slice());
                 }
             },
             // 1 2 3    3 6 9
@@ -182,18 +177,14 @@ impl UnicornHatHd {
             Rotate::RotCCW90 => for x in (0..16).rev() {
                 for y in 0..16 {
                     let led = self.get_pixel(x, y);
-                    arr.push(led.r);
-                    arr.push(led.g);
-                    arr.push(led.b);
+                    arr.extend_from_slice(led.as_slice());
                 }
             },
             // 1 2 3    9 8 7
             // 4 5 6 => 6 5 4 => 9 8 7 6 5 4 3 2 1
             // 7 8 9    3 2 1
             Rotate::Rot180 => for led in self.leds.iter().rev() {
-                arr.push(led.r);
-                arr.push(led.g);
-                arr.push(led.b);
+                arr.extend_from_slice(led.as_slice());
             },
         }
 
