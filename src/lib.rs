@@ -10,6 +10,7 @@ use ansi_term::Color::RGB;
 #[cfg(feature = "fake-hardware")]
 use ansi_term::ANSIStrings;
 use failure::Error;
+#[cfg(feature = "hardware")]
 use rgb::ComponentSlice;
 #[cfg(feature = "hardware")]
 use std::io::prelude::*;
@@ -108,8 +109,8 @@ impl UnicornHatHd {
         for y in 0..16 {
             let mut line = vec![];
             for x in 0..16 {
-                let (r, g, b) = self.get_pixel(x, y);
-                line.push(RGB(r, g, b).paint("*"));
+                let pixel = self.get_pixel(x, y);
+                line.push(RGB(pixel.r, pixel.g, pixel.b).paint("*"));
             }
             println!("{}", ANSIStrings(&line));
         }
