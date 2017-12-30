@@ -1,4 +1,4 @@
-# unicorn-hat-hd
+# unicorn-hat-hd [![Build Status](https://travis-ci.org/jhelwig/unicorn-hat-hd-rs.svg?branch=master)](https://travis-ci.org/jhelwig/unicorn-hat-hd-rs)
 
 Rust library for interacting with the Pimoroni Unicorn HAT HD.
 
