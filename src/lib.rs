@@ -1,22 +1,17 @@
 #[cfg(feature = "fake-hardware")]
 extern crate ansi_term;
+extern crate failure;
+extern crate rgb;
 #[cfg(feature = "hardware")]
 extern crate spidev;
-
-extern crate failure;
-
-extern crate rgb;
 
 #[cfg(feature = "fake-hardware")]
 use ansi_term::Color::RGB;
 #[cfg(feature = "fake-hardware")]
 use ansi_term::ANSIStrings;
-
 use failure::Error;
-
 #[cfg(feature = "hardware")]
 use std::io::prelude::*;
-
 #[cfg(feature = "hardware")]
 use spidev::{SPI_MODE_0, Spidev, SpidevOptions};
 
