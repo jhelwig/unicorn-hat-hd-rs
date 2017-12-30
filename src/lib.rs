@@ -16,7 +16,7 @@ use failure::Error;
 use std::io::prelude::*;
 
 #[cfg(feature = "hardware")]
-use spidev::{Spidev, SpidevOptions, SPI_MODE_0};
+use spidev::{SPI_MODE_0, Spidev, SpidevOptions};
 
 /// Possible rotations of the buffer before displaying to the
 /// Unicorn HAT HD.
@@ -65,7 +65,7 @@ impl UnicornHatHd {
             .build();
         try!(spidev.configure(&options));
         Ok(UnicornHatHd {
-        leds: [UnicornHatHdLed::default(); 256],
+            leds: [UnicornHatHdLed::default(); 256],
             spi: spidev,
             rotation: Rotate::RotNone,
         })
@@ -161,50 +161,42 @@ impl UnicornHatHd {
             // 1 2 3    1 2 3
             // 4 5 6 => 4 5 6 => 1 2 3 4 5 6 7 8 9
             // 7 8 9    7 8 9
-            Rotate::RotNone => {
-                for led in self.leds.iter() {
+            Rotate::RotNone => for led in self.leds.iter() {
                 let (r, g, b) = led.get_rgb();
                 arr.push(r);
                 arr.push(g);
                 arr.push(b);
-                }
             },
             // 1 2 3    7 4 1
             // 4 5 6 => 8 5 2 => 7 4 1 8 5 2 9 6 3
             // 7 8 9    9 6 3
-            Rotate::RotCW90 => {
-                for x in 0..16 {
-                    for y in (0..16).rev() {
-                        let (r, g, b) = self.get_pixel(x, y);
-                        arr.push(r);
-                        arr.push(g);
-                        arr.push(b);
-                    }
+            Rotate::RotCW90 => for x in 0..16 {
+                for y in (0..16).rev() {
+                    let (r, g, b) = self.get_pixel(x, y);
+                    arr.push(r);
+                    arr.push(g);
+                    arr.push(b);
                 }
             },
             // 1 2 3    3 6 9
             // 4 5 6 => 2 5 8 => 3 6 9 2 5 8 1 4 7
             // 7 8 9    1 4 7
-            Rotate::RotCCW90 => {
-                for x in (0..16).rev() {
-                    for y in 0..16 {
-                        let (r, g, b) = self.get_pixel(x, y);
-                        arr.push(r);
-                        arr.push(g);
-                        arr.push(b);
-                    }
+            Rotate::RotCCW90 => for x in (0..16).rev() {
+                for y in 0..16 {
+                    let (r, g, b) = self.get_pixel(x, y);
+                    arr.push(r);
+                    arr.push(g);
+                    arr.push(b);
                 }
             },
             // 1 2 3    9 8 7
             // 4 5 6 => 6 5 4 => 9 8 7 6 5 4 3 2 1
             // 7 8 9    3 2 1
-            Rotate::Rot180 => {
-                for led in self.leds.iter().rev() {
-                    let (r, g, b) = led.get_rgb();
-                    arr.push(r);
-                    arr.push(g);
-                    arr.push(b);
-                }
+            Rotate::Rot180 => for led in self.leds.iter().rev() {
+                let (r, g, b) = led.get_rgb();
+                arr.push(r);
+                arr.push(g);
+                arr.push(b);
             },
         }
 
@@ -221,7 +213,7 @@ impl Default for UnicornHatHd {
     }
 }
 
-#[derive(Clone,Copy)]
+#[derive(Clone, Copy)]
 struct UnicornHatHdLed {
     r: u8,
     b: u8,
@@ -242,10 +234,6 @@ impl UnicornHatHdLed {
 
 impl Default for UnicornHatHdLed {
     fn default() -> UnicornHatHdLed {
-        UnicornHatHdLed {
-            r: 0,
-            g: 0,
-            b: 0,
-        }
+        UnicornHatHdLed { r: 0, g: 0, b: 0 }
     }
 }
