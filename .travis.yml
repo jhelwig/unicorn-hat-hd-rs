@@ -2,4 +2,10 @@ language: rust
 rust:
   - stable
   - nightly
+env:
+  - FEATURES=hardware
+  - FEATURES=fake-hardware
+script:
+  - cargo build --verbose --no-default-features --features=${FEATURES}
+  - cargo test --verbose --no-default-features --features=${FEATURES}
 cache: cargo
