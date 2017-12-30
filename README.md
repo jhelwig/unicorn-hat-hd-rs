@@ -12,7 +12,7 @@ Add `unicorn_hat_hd` to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-unicorn_hat_hd = "0.1"
+unicorn_hat_hd = "0.2"
 ```
 
 Add `unicorn_hat_hd` to your crate root.
