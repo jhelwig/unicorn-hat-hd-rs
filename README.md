@@ -31,9 +31,9 @@ pub fn main() {
     loop {
         for y in 0..16 {
             for x in 0..16 {
-                hat_hd.set_pixel(x, y, 255, 255, 255);
+                hat_hd.set_pixel(x, y, [255, 255, 255].into());
                 hat_hd.display().unwrap();
-                hat_hd.set_pixel(x, y, 0, 0, 0);
+                hat_hd.set_pixel(x, y, [0, 0, 0].into());
             }
         }
     }
