@@ -162,7 +162,9 @@ impl UnicornHatHd {
             // 1 2 3    1 2 3
             // 4 5 6 => 4 5 6 => 1 2 3 4 5 6 7 8 9
             // 7 8 9    7 8 9
-            Rotate::RotNone => arr.extend_from_slice(self.leds.as_slice()),
+            Rotate::RotNone => for led in self.leds.iter() {
+                arr.extend_from_slice(led.as_slice())
+            },
             // 1 2 3    7 4 1
             // 4 5 6 => 8 5 2 => 7 4 1 8 5 2 9 6 3
             // 7 8 9    9 6 3
