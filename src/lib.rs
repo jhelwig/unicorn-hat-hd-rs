@@ -58,13 +58,13 @@ impl UnicornHatHd {
     /// where the first number if the bus and the second number
     /// is the chip select on that bus for the device being targeted.
     pub fn new(spi_path: &str) -> Result<UnicornHatHd, Error> {
-        let mut spidev = try!(Spidev::open(spi_path));
+        let mut spidev = Spidev::open(spi_path)?;
         let options = SpidevOptions::new()
             .bits_per_word(8)
             .max_speed_hz(9_000_000)
             .mode(SPI_MODE_0)
             .build();
-        try!(spidev.configure(&options));
+        spidev.configure(&options)?;
         Ok(UnicornHatHd {
             leds: [BLACK; 256],
             spi: spidev,
